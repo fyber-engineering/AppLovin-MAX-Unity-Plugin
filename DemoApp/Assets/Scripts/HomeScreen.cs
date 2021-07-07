@@ -1,25 +1,32 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HomeScreen : MonoBehaviour
 {
-    private const string MaxSdkKey = "ENTER_MAX_SDK_KEY_HERE";
-    private const string InterstitialAdUnitId = "ENTER_INTERSTITIAL_AD_UNIT_ID_HERE";
-    private const string RewardedAdUnitId = "ENTER_REWARD_AD_UNIT_ID_HERE";
+    private const string MaxSdkKey = "ii_dl8qJr1ExtsXA_ULcI5gZhfmuZgf8GytmWohw63n4dhslTQ_z3IPNic4HKKiNB9HDlu2RTBQbGEdngt-fiV";
+    private const string InterstitialAdUnitId = "6c26f2e5ff3cdf45";
+    private const string RewardedAdUnitId = "184b674152d66752";
     private const string RewardedInterstitialAdUnitId = "ENTER_REWARD_INTER_AD_UNIT_ID_HERE";
-    private const string BannerAdUnitId = "ENTER_BANNER_AD_UNIT_ID_HERE";
-    private const string MRecAdUnitId = "ENTER_MREC_AD_UNIT_ID_HERE";
+    private const string BannerAdUnitId = "5f3ea3b143114ce6";
+    private const string MRecAdUnitId = "0adfff5d219395a6";
 
+    public Button loadInterstitialButton;
     public Button showInterstitialButton;
+    public Button loadRewardedButton;
     public Button showRewardedButton;
+    public Button loadRewardedInterstitialButton;
     public Button showRewardedInterstitialButton;
+    public Button loadBannerButton;
     public Button showBannerButton;
+    public Button loadMRecButton;
     public Button showMRecButton;
     public Button mediationDebuggerButton;
     public Text interstitialStatusText;
     public Text rewardedStatusText;
     public Text rewardedInterstitialStatusText;
+    public Text bannerStatusText;
+    public Text mrecStatusText;
 
     private bool isBannerShowing;
     private bool isMRecShowing;
@@ -30,10 +37,20 @@ public class HomeScreen : MonoBehaviour
 
     void Start()
     {
+        interstitialStatusText.text = " ";
+        rewardedStatusText.text = " ";
+        rewardedInterstitialStatusText.text = " ";
+        bannerStatusText.text = " ";
+        mrecStatusText.text = " ";        
+        loadInterstitialButton.onClick.AddListener(LoadInterstitial);
         showInterstitialButton.onClick.AddListener(ShowInterstitial);
+        loadRewardedButton.onClick.AddListener(LoadRewardedAd);
         showRewardedButton.onClick.AddListener(ShowRewardedAd);
+        loadRewardedInterstitialButton.onClick.AddListener(LoadRewardedInterstitialAd);
         showRewardedInterstitialButton.onClick.AddListener(ShowRewardedInterstitialAd);
+        loadBannerButton.onClick.AddListener(LoadBanner);
         showBannerButton.onClick.AddListener(ToggleBannerVisibility);
+        loadMRecButton.onClick.AddListener(LoadMRec);
         showMRecButton.onClick.AddListener(ToggleMRecVisibility);
         mediationDebuggerButton.onClick.AddListener(MaxSdk.ShowMediationDebugger);
 
@@ -65,7 +82,7 @@ public class HomeScreen : MonoBehaviour
         MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnInterstitialRevenuePaidEvent;
         
         // Load the first interstitial
-        LoadInterstitial();
+        //LoadInterstitial();
     }
 
     void LoadInterstitial()
@@ -120,7 +137,8 @@ public class HomeScreen : MonoBehaviour
     {
         // Interstitial ad is hidden. Pre-load the next ad
         Debug.Log("Interstitial dismissed");
-        LoadInterstitial();
+        // LoadInterstitial();
+        interstitialStatusText.text = " ";
     }
 
     private void OnInterstitialRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -155,7 +173,7 @@ public class HomeScreen : MonoBehaviour
         MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnRewardedAdRevenuePaidEvent;
 
         // Load the first RewardedAd
-        LoadRewardedAd();
+        // LoadRewardedAd();
     }
 
     private void LoadRewardedAd()
@@ -220,7 +238,8 @@ public class HomeScreen : MonoBehaviour
     {
         // Rewarded ad is hidden. Pre-load the next ad
         Debug.Log("Rewarded ad dismissed");
-        LoadRewardedAd();
+        rewardedStatusText.text = " ";
+        // LoadRewardedAd();
     }
 
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
@@ -261,7 +280,7 @@ public class HomeScreen : MonoBehaviour
         MaxSdkCallbacks.RewardedInterstitial.OnAdRevenuePaidEvent += OnRewardedInterstitialAdRevenuePaidEvent;
 
         // Load the first RewardedInterstitialAd
-        LoadRewardedInterstitialAd();
+        //LoadRewardedInterstitialAd();
     }
 
     private void LoadRewardedInterstitialAd()
@@ -326,7 +345,8 @@ public class HomeScreen : MonoBehaviour
     {
         // Rewarded interstitial ad is hidden. Pre-load the next ad
         Debug.Log("Rewarded interstitial ad dismissed");
-        LoadRewardedInterstitialAd();
+        rewardedInterstitialStatusText.text = " ";
+        // LoadRewardedInterstitialAd();
     }
 
     private void OnRewardedInterstitialAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
@@ -361,6 +381,11 @@ public class HomeScreen : MonoBehaviour
         MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerAdFailedEvent;
         MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
         MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnBannerAdRevenuePaidEvent;
+    }
+
+    private void LoadBanner()
+    {
+        bannerStatusText.text = "Loading...";
 
         // Banners are automatically sized to 320x50 on phones and 728x90 on tablets.
         // You may use the utility method `MaxSdkUtils.isTablet()` to help with view sizing adjustments.
@@ -388,6 +413,7 @@ public class HomeScreen : MonoBehaviour
 
     private void OnBannerAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
+        bannerStatusText.text = "Loaded";        
         // Banner ad is ready to be shown.
         // If you have already called MaxSdk.ShowBanner(BannerAdUnitId) it will automatically be shown on the next ad refresh.
         Debug.Log("Banner ad loaded");
@@ -430,7 +456,11 @@ public class HomeScreen : MonoBehaviour
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdFailedEvent;
         MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecAdClickedEvent;
         MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnMRecAdRevenuePaidEvent;
+    }
 
+    private void LoadMRec()
+    {
+        mrecStatusText.text = "Loading...";        
         // MRECs are automatically sized to 300x250.
         MaxSdk.CreateMRec(MRecAdUnitId, MaxSdkBase.AdViewPosition.BottomCenter);
     }
@@ -453,6 +483,7 @@ public class HomeScreen : MonoBehaviour
 
     private void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
+        mrecStatusText.text = "Loading...";        
         // MRec ad is ready to be shown.
         // If you have already called MaxSdk.ShowMRec(MRecAdUnitId) it will automatically be shown on the next MRec refresh.
         Debug.Log("MRec ad loaded");
