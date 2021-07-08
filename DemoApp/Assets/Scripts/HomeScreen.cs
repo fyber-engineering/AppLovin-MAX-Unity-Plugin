@@ -107,7 +107,7 @@ public class HomeScreen : MonoBehaviour
     private void OnInterstitialLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(interstitialAdUnitId) will now return 'true'
-        interstitialStatusText.text = "Loaded";
+        interstitialStatusText.text = "Loaded (" + adInfo.NetworkName + ")";
         Debug.Log("Interstitial loaded");
         
         // Reset retry attempt
@@ -198,7 +198,7 @@ public class HomeScreen : MonoBehaviour
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded ad is ready to be shown. MaxSdk.IsRewardedAdReady(rewardedAdUnitId) will now return 'true'
-        rewardedStatusText.text = "Loaded";
+        rewardedStatusText.text = "Loaded (" + adInfo.NetworkName + ")";
         Debug.Log("Rewarded ad loaded");
         
         // Reset retry attempt
@@ -305,7 +305,7 @@ public class HomeScreen : MonoBehaviour
     private void OnRewardedInterstitialAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded interstitial ad is ready to be shown. MaxSdk.IsRewardedInterstitialAdReady(rewardedInterstitialAdUnitId) will now return 'true'
-        rewardedInterstitialStatusText.text = "Loaded";
+        rewardedInterstitialStatusText.text = "Loaded (" + adInfo.NetworkName + ")";
         Debug.Log("Rewarded interstitial ad loaded");
         
         // Reset retry attempt
@@ -386,6 +386,9 @@ public class HomeScreen : MonoBehaviour
     private void LoadBanner()
     {
         bannerStatusText.text = "Loading...";
+        isBannerShowing = false;
+        showBannerButton.GetComponentInChildren<Text>().text = "Show Banner";
+
 
         // Banners are automatically sized to 320x50 on phones and 728x90 on tablets.
         // You may use the utility method `MaxSdkUtils.isTablet()` to help with view sizing adjustments.
@@ -413,7 +416,7 @@ public class HomeScreen : MonoBehaviour
 
     private void OnBannerAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        bannerStatusText.text = "Loaded";        
+        bannerStatusText.text = "Loaded (" + adInfo.NetworkName + ")";        
         // Banner ad is ready to be shown.
         // If you have already called MaxSdk.ShowBanner(BannerAdUnitId) it will automatically be shown on the next ad refresh.
         Debug.Log("Banner ad loaded");
@@ -460,7 +463,10 @@ public class HomeScreen : MonoBehaviour
 
     private void LoadMRec()
     {
-        mrecStatusText.text = "Loading...";        
+        mrecStatusText.text = "Loading...";
+        isMRecShowing = false;
+        showMRecButton.GetComponentInChildren<Text>().text = "Show MREC";
+        
         // MRECs are automatically sized to 300x250.
         MaxSdk.CreateMRec(MRecAdUnitId, MaxSdkBase.AdViewPosition.BottomCenter);
     }
@@ -483,7 +489,7 @@ public class HomeScreen : MonoBehaviour
 
     private void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        mrecStatusText.text = "Loading...";        
+        mrecStatusText.text = "Loaded (" + adInfo.NetworkName + ")";        
         // MRec ad is ready to be shown.
         // If you have already called MaxSdk.ShowMRec(MRecAdUnitId) it will automatically be shown on the next MRec refresh.
         Debug.Log("MRec ad loaded");
